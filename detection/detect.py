@@ -65,24 +65,43 @@ while cap.isOpened() == True:
         rElbow = [lm[mp_pose.PoseLandmark.RIGHT_ELBOW.value].x , lm[mp_pose.PoseLandmark.RIGHT_ELBOW.value].y]
         rWrist = [lm[mp_pose.PoseLandmark.RIGHT_WRIST.value].x , lm[mp_pose.PoseLandmark.RIGHT_WRIST.value].y]
         rPinky = [lm[mp_pose.PoseLandmark.RIGHT_PINKY.value].x , lm[mp_pose.PoseLandmark.RIGHT_PINKY.value].y]
+        rHip = [lm[mp_pose.PoseLandmark.RIGHT_HIP.value].x , lm[mp_pose.PoseLandmark.RIGHT_HIP.value].y]
+        rKnee = [lm[mp_pose.PoseLandmark.RIGHT_KNEE.value].x , lm[mp_pose.PoseLandmark.RIGHT_KNEE.value].y]
+        rAnkle = [lm[mp_pose.PoseLandmark.RIGHT_ANKLE.value].x , lm[mp_pose.PoseLandmark.RIGHT_ANKLE.value].y]
+        
 
         lShoulder = [lm[mp_pose.PoseLandmark.LEFT_SHOULDER.value].x , lm[mp_pose.PoseLandmark.LEFT_SHOULDER.value].y]
         lElbow = [lm[mp_pose.PoseLandmark.LEFT_ELBOW.value].x , lm[mp_pose.PoseLandmark.LEFT_ELBOW.value].y]
         lWrist = [lm[mp_pose.PoseLandmark.LEFT_WRIST.value].x , lm[mp_pose.PoseLandmark.LEFT_WRIST.value].y]
         lPinky = [lm[mp_pose.PoseLandmark.LEFT_PINKY.value].x , lm[mp_pose.PoseLandmark.LEFT_PINKY.value].y]
+        lHip = [lm[mp_pose.PoseLandmark.LEFT_HIP.value].x , lm[mp_pose.PoseLandmark.LEFT_HIP.value].y]
+        lKnee = [lm[mp_pose.PoseLandmark.LEFT_KNEE.value].x , lm[mp_pose.PoseLandmark.LEFT_KNEE.value].y]
+        lAnkle = [lm[mp_pose.PoseLandmark.LEFT_ANKLE.value].x , lm[mp_pose.PoseLandmark.LEFT_ANKLE.value].y]
         
         rElbowAng = ang(rShoulder , rElbow , rWrist)
         rWristAng = ang(rElbow , rWrist , rPinky)
+        rShoulderAng = ang(rHip , rShoulder , rElbow)
+        rHipAng = ang(rKnee , rHip , rShoulder)
+        rKneeAng = ang(rAnkle , rKnee , rHip)
         lElbowAng = ang(lShoulder , lElbow , lWrist)
         lWristAng = ang(lElbow , lWrist , lPinky)
+        lShoulderAng = ang(lHip , lShoulder , lElbow)
+        lHipAng = ang(lKnee , lHip , lShoulder)
+        lKneeAng = ang(lAnkle , lKnee , lHip)
 
 
         #Rounding Off to 2 decimal places
 
         rElbowAng = round(rElbowAng , 2)
         rWristAng = round(rWristAng , 2)
+        rShoulderAng = round(rShoulderAng , 2)
+        rHipAng = round(rHipAng , 2)
+        rKneeAng = round(rKneeAng , 2)
         lElbowAng = round(lElbowAng , 2)
         lWristAng = round(lWristAng , 2)
+        rlhoulderAng = round(lShoulderAng , 2)
+        lHipAng = round(lHipAng , 2)
+        lKneeAng = round(lKneeAng , 2)
 
 
         cv2.putText(img , str(rElbowAng) , tuple(np.multiply(rElbow , [frame_width , frame_height]).astype(int)) , cv2.FONT_HERSHEY_SIMPLEX , 0.5 , (255,255,255) , 2 , cv2.LINE_AA)
