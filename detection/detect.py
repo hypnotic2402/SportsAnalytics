@@ -2,10 +2,11 @@ import sys
 import cv2
 import mediapipe as mp
 import numpy as np
+
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_pose = mp.solutions.pose
-
+\
 
 # Funtion to return angle between 3 points in R3
 
@@ -20,6 +21,25 @@ def ang(a,b,c):
     else:
         return 360-x
 
+
+# rsa = []
+# rea = []
+# rwa = []
+# rpa = []
+# rha = []
+# rka = []
+# raa = []
+# lsa = []
+# lea = []
+# lwa = []
+# lpa = []
+# lha = []
+# lka = []
+# laa = []
+
+headers = ['frame' , 'rea' , 'rwa' , 'rsa', 'rha' , 'rka' , 'lea' , 'lwa' , 'lsa', 'lha' , 'lka' ]
+data = []
+#data = [fNum , rElbowAng , rWristAng , rShoulderAng , rHipAng , rKneeAng , lElbowAng , lWristAng , lShoulderAng , lHipAng , lKneeAng]
 
 
 
@@ -40,11 +60,15 @@ out_filename = f'{outdir}{inflnm}_annotated.{inflext}'
 out = cv2.VideoWriter(out_filename, cv2.VideoWriter_fourcc(
     'M', 'J', 'P', 'G'), 30, (frame_width, frame_height))
 
+fNum = 0
+
 while cap.isOpened() == True:
+
     success , img = cap.read()
     if not success:
         break
 
+    fNum+=1
     #img = cv2.flip(img , 1)
     img = cv2.cvtColor(img , cv2.COLOR_BGR2RGB)
     img.flags.writeable = False
@@ -109,6 +133,8 @@ while cap.isOpened() == True:
         cv2.putText(img , str(lElbowAng) , tuple(np.multiply(lElbow , [frame_width , frame_height]).astype(int)) , cv2.FONT_HERSHEY_SIMPLEX , 0.5 , (255,255,255) , 2 , cv2.LINE_AA)
         cv2.putText(img , str(lWristAng) , tuple(np.multiply(lWrist , [frame_width , frame_height]).astype(int)) , cv2.FONT_HERSHEY_SIMPLEX , 0.5 , (255,255,255) , 2 , cv2.LINE_AA)
 
+        data = [fNum , rElbowAng , rWristAng , rShoulderAng , rHipAng , rKneeAng , lElbowAng , lWristAng , lShoulderAng , lHipAng , lKneeAng]
+        
     except:
         pass
 
