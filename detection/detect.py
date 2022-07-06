@@ -1,12 +1,14 @@
+from email import header
 import sys
 import cv2
 import mediapipe as mp
 import numpy as np
+import csv
 
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_pose = mp.solutions.pose
-\
+
 
 # Funtion to return angle between 3 points in R3
 
@@ -123,7 +125,7 @@ while cap.isOpened() == True:
         rKneeAng = round(rKneeAng , 2)
         lElbowAng = round(lElbowAng , 2)
         lWristAng = round(lWristAng , 2)
-        rlhoulderAng = round(lShoulderAng , 2)
+        lShoulderAng = round(lShoulderAng , 2)
         lHipAng = round(lHipAng , 2)
         lKneeAng = round(lKneeAng , 2)
 
@@ -133,8 +135,11 @@ while cap.isOpened() == True:
         cv2.putText(img , str(lElbowAng) , tuple(np.multiply(lElbow , [frame_width , frame_height]).astype(int)) , cv2.FONT_HERSHEY_SIMPLEX , 0.5 , (255,255,255) , 2 , cv2.LINE_AA)
         cv2.putText(img , str(lWristAng) , tuple(np.multiply(lWrist , [frame_width , frame_height]).astype(int)) , cv2.FONT_HERSHEY_SIMPLEX , 0.5 , (255,255,255) , 2 , cv2.LINE_AA)
 
-        data = [fNum , rElbowAng , rWristAng , rShoulderAng , rHipAng , rKneeAng , lElbowAng , lWristAng , lShoulderAng , lHipAng , lKneeAng]
-        
+        d = [fNum , rElbowAng , rWristAng , rShoulderAng , rHipAng , rKneeAng , lElbowAng , lWristAng , lShoulderAng , lHipAng , lKneeAng]
+        data.append(d)
+
+
+
     except:
         pass
 
@@ -147,6 +152,11 @@ while cap.isOpened() == True:
 
 
     out.write(img)
+
+with open(sys.argv[2] , 'w' , encoding='UTF8' , newline='') as f:
+    writer = csv.writer(f)
+    writer.writerow(headers)
+    writer.writerows(data)
 
 poseObj.close()
 cap.release()
