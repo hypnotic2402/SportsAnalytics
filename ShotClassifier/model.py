@@ -11,12 +11,17 @@ def normalizeArray(ar , mean , var): #function to normalize the array to zero me
     ar = (ar - mean) / var
     return ar
 
-def generateDistanceMatrix(distMat , td , ds):
+def generateDistanceMatrix(td , ds):
+    
+    m = td[0].length()
+    distMat = np.zeros([ds.length() , n,m])
+    y = 0
     
     for x in ds: # r such iterations
         multiDimSignal = x[0]
         l = multiDimSignal.length()
         n = multiDimSignal[0].length()
+        
 
         meanVar = []
         # for i in range(l):
@@ -34,16 +39,16 @@ def generateDistanceMatrix(distMat , td , ds):
 
         # Smoothen with gaussian if neccessary later
 
-
-
         
+        for i in range(n):
+            for j in range(m):
+                for k in range(l):
+                    distMat[y , i,j] += abs(multiDimSignal[i,k] - td[j,k])
 
+        y += 1
 
-
-
-        
-            
-    
+    return distMat
+           
 
 def calcDTWdistance(distMat): #function to retrun the DTW allignment cost
     return 0
@@ -67,8 +72,7 @@ l = dataSet.length()
 n = dataSet[0].length()
 
 
-distMat = np.zeros([]) # [ [n X m Matrix] , [n X m Matrix] , [n X m Matrix] , ... r times]
-generateDistanceMatrix(distMat, testData , dataSet)
+distMat = generateDistanceMatrix(testData , dataSet)
 
 costData = [] # r long array
 
