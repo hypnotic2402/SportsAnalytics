@@ -2,9 +2,24 @@ from unicodedata import normalize
 import numpy as np
 from matplotlib.patches import ConnectionPatch
 import matplotlib.pyplot as plt
+import glob
+
+def getshottype(filename):
+    pass
+
+def getfiledata(filename):
+    dataset = np.loadtxt(filename, delimiter =",", dtype = float, skiprows=1, usecols = range(1, 11))
+    print(dataset)
+    return dataset
 
 def fillDataSet(ds):  # function to fill the data set
-    pass
+    path = "../data"
+    all_files = glob.glob(path + "/*.csv")
+    for filename in all_files:
+        filedata = getfiledata(filename)
+        typ = getshottype(filename)
+        tempdata = [filedata, typ]
+        ds.append(tempdata)
 
 
 def getTestData(td):  # function to get the test data
