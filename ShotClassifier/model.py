@@ -1,15 +1,24 @@
+from statistics import mean
 from unicodedata import normalize
+import csv
 import numpy as np
 from matplotlib.patches import ConnectionPatch
 import matplotlib.pyplot as plt
 import glob
 
 def getshottype(filename):
-    pass
+    file = open(filename)
+    file = csv.reader(file)
+    count = 0
+    for row in file:
+        if(count == 1):
+            typ = row[11]
+        count=count+1
+    return typ
 
 def getfiledata(filename):
     dataset = np.loadtxt(filename, delimiter =",", dtype = float, skiprows=1, usecols = range(1, 11))
-    print(dataset)
+    dataset = dataset.tolist()
     return dataset
 
 def fillDataSet(ds):  # function to fill the data set
@@ -18,12 +27,15 @@ def fillDataSet(ds):  # function to fill the data set
     for filename in all_files:
         filedata = getfiledata(filename)
         typ = getshottype(filename)
-        tempdata = [filedata, typ]
+        tempdata = [filedata, int(typ)]
         ds.append(tempdata)
 
 
-def getTestData(td):  # function to get the test data
-    pass
+def getTestData():  # function to get the test data
+    path = "../test/p1-s1-v1.csv"
+    dataset = np.loadtxt(path, delimiter =",", dtype = float, skiprows=1, usecols = range(1, 11))
+    dataset = dataset.tolist()
+    return dataset
 
 
 # function to normalize the array to zero mean and unit standard deviation
@@ -32,38 +44,39 @@ def normalizeArray(ar, mean, var):
     return ar
 
 
-def generateDistanceMatrix(td, ds):
+def generateDistanceMatrix(td, ds, n):
 
-    m = td[0].length()
-    distMat = np.zeros([ds.length(), n, m])
+    m = len(td[0])
+    distMat = np.zeros([len(ds), n, m])
     y = 0
 
     for x in ds:  # r such iterations
         multiDimSignal = x[0]
-        l = multiDimSignal.length()
-        n = multiDimSignal[0].length()
+        l = len(multiDimSignal)
+        n1 = len(multiDimSignal[0])
 
         meanVar = []
         # for i in range(l):
         #     meanVar.append([0,0])
 
-        for i in multiDimSignal.length():
-            arr = np.array(multiDimSignal[i])
-            meanVar.append([np.mean(arr), np.std(arr)])
-
-        temp = np.empty([l, n])
         for i in range(l):
-            temp.append(
-                (np.array(multiDimSignal[i]) - meanVar[i, 0]) / meanVar[i, 1])
+            arr = np.array(multiDimSignal[i])
+            tempVar = [np.mean(arr), np.std(arr)]
+            meanVar.append(tempVar)
 
+        temp = np.empty([l, n1])
+        for i in range(l):
+            temp = np.append(temp, (np.array(multiDimSignal[i]) - meanVar[i][0]) / meanVar[i][1])
+
+        print(temp)
         # temp now holds normalized vlues of each feature's vector
 
         # Smoothen with gaussian if neccessary later
 
-        for i in range(n):
+        for i in range(n1):
             for j in range(m):
                 for k in range(l):
-                    distMat[y, i, j] += abs(multiDimSignal[i, k] - td[j, k])
+                    distMat[y, i, j] += abs(multiDimSignal[i][k] - td[j][k])
 
         y += 1
 
@@ -121,20 +134,20 @@ def calcDTWdistance(distMat):  # function to retrun the DTW allignment cost
 
 dataSet = []  # [ [ [n X l Matrix] , type] , [[n X l Matrix] , type] , ... r times] : [n X l Matrix] = [[feature0 array] , [feature1 array] , [feature2 array] , ...[featurel array]]
 fillDataSet(dataSet)
+# print(dataSet)
+testData = getTestData()# [m X l Matrix]
+# print(testData)
 
-testData = []  # [m X l Matrix]
-getTestData(testData)
-
-l = dataSet.length()
-n = dataSet[0].length()
+l = len(dataSet)
+n = len(dataSet[0])
 
 
-distMat = generateDistanceMatrix(testData, dataSet)
+distMat = generateDistanceMatrix(testData, dataSet, n)
 
 costData = []  # r long array
 
 
-for i in dataSet.length():
+for i in range(l):
     costData.append(calcDTWdistance([distMat[i] , i]))
     
 
