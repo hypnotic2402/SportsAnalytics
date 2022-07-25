@@ -1,4 +1,5 @@
 from operator import le
+from pickletools import read_uint1
 from statistics import mean
 from unicodedata import normalize
 import csv
@@ -6,6 +7,9 @@ import numpy as np
 from matplotlib.patches import ConnectionPatch
 import matplotlib.pyplot as plt
 import glob
+import sys
+import os
+import csv
 
 def getshottype(filename):
     file = open(filename)
@@ -32,11 +36,12 @@ def fillDataSet(ds):  # function to fill the data set
         ds.append(tempdata)
 
 
-def getTestData():  # function to get the test data
-    path = "../test/p1-s1-v1.csv"
+def getTestData(fn):  # function to get the test data
+    # path = "../test/p1-s1-v1.csv"
+    path = "../test/" + fn
     dataset = np.loadtxt(path, delimiter =",", dtype = float, skiprows=1, usecols = range(1, 11))
     dataset = dataset.tolist()
-    return dataset
+    return [dataset,getshottype(path)]
 
 
 # function to normalize the array to zero mean and unit standard deviation
@@ -99,7 +104,7 @@ def generateDistanceMatrix(td, ds, n):
             # print(y)
             for j in range(len(td)):
                 for nfeatures in range(10):
-                    print("i = " + str(i) + ", j = " + str(j) + ",k = " + str(nfeatures))
+                    # print("i = " + str(i) + ", j = " + str(j) + ",k = " + str(nfeatures))
                     distMat[y, i , j] += abs(multiDimSignal[i][nfeatures] - td[j][nfeatures])
 
 
@@ -165,7 +170,8 @@ def calcDTWdistance(distMat , l ) :  # function to retrun the DTW allignment cos
 dataSet = []  # [ [ [n X l Matrix] , type] , [[n X l Matrix] , type] , ... r times] : [n X l Matrix] = [[feature0 array] , [feature1 array] , [feature2 array] , ...[featurel array]]
 fillDataSet(dataSet)
 # print(dataSet)
-testData = getTestData()# [m X l Matrix]
+testData = getTestData(sys.argv[1])[0]# [m X l Matrix]
+testType = getTestData(sys.argv[1])[1]
 # print(testData)
 
 l = len(dataSet)
@@ -182,10 +188,49 @@ costData = calcDTWdistance(distMat, l ) # r long array
 # for i in range(l):
 #     costData.append(calcDTWdistance([distMat[i] , i]))
 
+costs = {}
 
-print(costData)
+# print(len(costData[43]))
+for i in range(len(costData)):
+    # print(costData[i][71][40])
+    costs[i] = costData[i][71][40]
+
+# print(costs)
+# print("sorted")
+costSorted = {k: v for k, v in sorted(costs.items(), key=lambda item: item[1])}
+# print(costSorted)
+
+
+
 
 k = 5  # number of k neighbors to be considered
+z = 0
+indexes = []
+for i in costSorted:
+    if z == k:
+        break
+    indexes.append(i)
+
+    z+=1
+
+# print(indexes)
+
+neigbours = {1:0,2:0,3:0,4:0}
+for i in indexes:
+    neigbours[dataSet[i][1]] += 1
 
 
+# print(neigbours)
+neigboursSorted = {k: v for k, v in sorted(neigbours.items(), key=lambda item: item[1])}
+# print(neigboursSorted)
+b = 0
+# print(testType)
+result = 0
+for i in neigboursSorted:
+    if b == 3:
+        if str(i) == str(testType):
+            result = 1
+    b+= 1
+
+print(result)
 
