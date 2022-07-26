@@ -203,7 +203,7 @@ costSorted = {k: v for k, v in sorted(costs.items(), key=lambda item: item[1])}
 
 
 
-k = 5  # number of k neighbors to be considered
+k = sys.argv[2]  # number of k neighbors to be considered
 z = 0
 indexes = []
 for i in costSorted:
