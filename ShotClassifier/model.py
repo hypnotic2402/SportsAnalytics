@@ -190,10 +190,12 @@ costData = calcDTWdistance(distMat, l ) # r long array
 
 costs = {}
 
+p = np.array(costData).shape
+
 # print(len(costData[43]))
 for i in range(len(costData)):
     # print(costData[i][71][40])
-    costs[i] = costData[i][71][40]
+    costs[i] = costData[i][p[1]-1][p[2]-1]
 
 # print(costs)
 # print("sorted")
@@ -232,5 +234,6 @@ for i in neigboursSorted:
             result = 1
     b+= 1
 
+# print("hewwo")
 print(result)
 

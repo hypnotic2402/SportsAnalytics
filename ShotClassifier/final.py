@@ -4,7 +4,7 @@ import subprocess
 
 x = {}
 
-for k in range(100):
+for k in range(5):
     # k = 10
     wrong = 0
     correct = 0
@@ -14,6 +14,7 @@ for k in range(100):
             fn = "p" + str(i) + "-s"+str(j) + "-v1.csv" 
             # result = os.popen("python3 model.py " + "p" + str(i) + "-s"+str(j) +"-v1.csv")
             result = subprocess.run(["python3" , "model.py" , fn , str(k)] , capture_output = True , text=True).stdout
+            # print(result)
             result = str(result)
             # CompletedProcess(args=['python3', 'model.py', 'p1-s1-v1.csv' , "3"], returncode=0, stdout=b'1\n', stderr=b'')
             # result = result[90:91]
