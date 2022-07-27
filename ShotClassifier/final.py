@@ -4,7 +4,7 @@ import subprocess
 
 x = {}
 
-for k in range(5):
+for k in range(100):
     # k = 10
     wrong = 0
     correct = 0
