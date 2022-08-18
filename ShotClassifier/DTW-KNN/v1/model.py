@@ -27,7 +27,7 @@ def getfiledata(filename):
     return dataset
 
 def fillDataSet(ds):  # function to fill the data set
-    path = "../data"
+    path = "../../../data"
     all_files = glob.glob(path + "/*.csv")
     for filename in all_files:
         filedata = getfiledata(filename)
@@ -38,7 +38,7 @@ def fillDataSet(ds):  # function to fill the data set
 
 def getTestData(fn):  # function to get the test data
     # path = "../test/p1-s1-v1.csv"
-    path = "../test/" + fn
+    path = "../../../test/" + fn
     dataset = np.loadtxt(path, delimiter =",", dtype = float, skiprows=1, usecols = range(1, 11))
     dataset = dataset.tolist()
     return [dataset,getshottype(path)]
