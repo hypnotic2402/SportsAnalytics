@@ -16,16 +16,18 @@ from tensorflow.keras import layers
 
 
 
-def givePred(x_path , model_path):
+def givePred(data , model_path):
     model = keras.models.load_model(model_path)
-    x = pd.read_csv(x_path)
-    x = x.drop(columns="Unnamed: 0")
-    x = x.to_numpy()
+    x = data
+    # x = x.to_numpy()
     x = np.expand_dims(x , axis=0)
+    print(x.shape)
 
     
     return (np.argmax(model.predict(x , verbose = 0)) + 1)
 
+
+# print(givePred('testMatrices/xTest-0-2.csv', 'badminton2.h5'))
     
 
 
